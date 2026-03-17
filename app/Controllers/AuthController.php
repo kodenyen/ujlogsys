@@ -24,7 +24,7 @@ class AuthController extends Controller {
                 $this->render('auth/login', ['error' => 'Invalid username or password']);
             }
         } else {
-            if (isset($_SESSION['user_id'])) {
+            if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
                 // Already logged in, redirect based on role
                 $this->redirectByRole($_SESSION['role']);
             }

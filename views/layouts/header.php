@@ -52,7 +52,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><span class="nav-link text-light me-3">Welcome, <?= $_SESSION['full_name'] ?> (<?= $_SESSION['role'] ?>)</span></li>
+                    <li class="nav-item"><span class="nav-link text-light me-3">Welcome, <?= $_SESSION['full_name'] ?? 'User' ?> (<?= $_SESSION['role'] ?? '' ?>)</span></li>
                     <li class="nav-item"><a class="nav-link btn btn-danger btn-sm text-white" href="<?= BASE_URL ?>/logout">Logout</a></li>
                 </ul>
             </div>

@@ -8,8 +8,8 @@
                     <i class="fa-solid fa-hospital fa-2x text-primary"></i>
                 <?php endif; ?>
             </div>
-            <h6 class="text-white mb-0"><?= $_SESSION['full_name'] ?></h6>
-            <small class="text-warning"><?= $_SESSION['role'] ?></small>
+            <h6 class="text-white mb-0"><?= $_SESSION['full_name'] ?? 'User' ?></h6>
+            <small class="text-warning"><?= $_SESSION['role'] ?? '' ?></small>
         </div>
 
         <ul class="nav flex-column">
