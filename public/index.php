@@ -47,10 +47,17 @@ $router->add('consultant/confirmAttendance', 'ConsultantController', 'confirmAtt
 $router->add('consultant/approveLog', 'ConsultantController', 'approveLog');
 
 // Get URL and dispatch
+$url = '';
 if (isset($_GET['url'])) {
-    $url = $_GET['url'];
+    $url = trim($_GET['url'], '/');
 } else {
-    // Built-in server compatibility
-    $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $url = trim($path, '/');
 }
+
+// Redirect root to login if no path
+if ($url === '') {
+    $url = 'login';
+}
+
 $router->dispatch($url);

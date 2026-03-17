@@ -19,20 +19,7 @@ class AuthController extends Controller {
                 $_SESSION['full_name'] = $user['full_name'];
                 $_SESSION['role'] = $user['role'];
 
-                // Redirect based on role
-                switch ($user['role']) {
-                    case 'Admin':
-                        $this->redirect('/admin/dashboard');
-                        break;
-                    case 'Student':
-                        $this->redirect('/student/dashboard');
-                        break;
-                    case 'Consultant':
-                        $this->redirect('/consultant/dashboard');
-                        break;
-                    default:
-                        $this->redirect('/login');
-                }
+                $this->redirectByRole($user['role']);
             } else {
                 $this->render('auth/login', ['error' => 'Invalid username or password']);
             }
@@ -52,10 +39,24 @@ class AuthController extends Controller {
 
     private function redirectByRole($role) {
         switch ($role) {
-            case 'Admin': $this->redirect('/admin/dashboard'); break;
-            case 'Student': $this->redirect('/student/dashboard'); break;
-            case 'Consultant': $this->redirect('/consultant/dashboard'); break;
-            default: $this->redirect('/login');
+            case 'Admin':
+                $this->redirect('/admin/dashboard');
+                break;
+            case 'Student':
+                $this->redirect('/student/dashboard');
+                break;
+            case 'Consultant':
+            case 'Lecturer':
+            case 'Tutor':
+                $this->redirect('/consultant/dashboard');
+                break;
+            default:
+                // If role is unknown, just stay on login or logout
+                if (isset($_SESSION['user_id'])) {
+                    session_destroy();
+                }
+                $this->render('auth/login', ['error' => 'Unauthorized role.']);
+                exit();
         }
     }
 }

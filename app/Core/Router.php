@@ -25,15 +25,8 @@ class Router {
                 die("Controller $controllerName not found");
             }
         } else {
-            // Default route or 404
-            if ($url === '') {
-                $controllerName = "App\\Controllers\\AuthController";
-                $controller = new $controllerName();
-                $controller->login();
-            } else {
-                http_response_code(404);
-                echo "404 Not Found";
-            }
+            http_response_code(404);
+            echo "404 Not Found (Route: $url)";
         }
     }
 }
