@@ -36,28 +36,32 @@
     </style>
 </head>
 <body>
-    <?php if (isset($_SESSION['user_id'])): ?>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="<?= BASE_URL ?>">
                 <?php if (!empty($settings['org_logo'])): ?>
-                    <img src="<?= $baseUrl ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" height="30" class="me-2">
+                    <img src="<?= $baseUrl ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" height="35" class="me-2">
                 <?php else: ?>
-                    <i class="fa-solid fa-file-medical me-2 text-gold"></i>
+                    <i class="fa-solid fa-file-medical me-2"></i>
                 <?php endif; ?>
                 <?= $settings['org_name'] ?? APP_NAME ?>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><span class="nav-link text-light me-3">Welcome, <?= $_SESSION['full_name'] ?? 'User' ?> (<?= $_SESSION['role'] ?? '' ?>)</span></li>
-                    <li class="nav-item"><a class="nav-link btn btn-danger btn-sm text-white" href="<?= BASE_URL ?>/logout">Logout</a></li>
-                </ul>
-            </div>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><span class="nav-link text-light me-3">Welcome, <?= $_SESSION['full_name'] ?? 'User' ?> (<?= $_SESSION['role'] ?? '' ?>)</span></li>
+                        <li class="nav-item"><a class="nav-link btn btn-danger btn-sm text-white" href="<?= BASE_URL ?>/logout">Logout</a></li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </nav>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
     <div class="container-fluid">
         <div class="row">
     <?php endif; ?>
