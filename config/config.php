@@ -6,7 +6,7 @@ define('DB_PASS', '');
 define('DB_NAME', 'ujlogsys');
 
 // App configuration
-define('BASE_URL', 'http://localhost/ujlogsys');
+define('BASE_URL', 'http://localhost:8080');
 define('APP_NAME', 'UJ Clinical Log System');
 
 // Error reporting (set to 0 for production)

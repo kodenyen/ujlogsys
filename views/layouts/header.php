@@ -1,3 +1,4 @@
+<?php $baseUrl = rtrim(BASE_URL, '/'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +41,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <?php if (!empty($settings['org_logo'])): ?>
-                    <img src="<?= BASE_URL ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" height="30" class="me-2">
+                    <img src="<?= $baseUrl ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" height="30" class="me-2">
                 <?php else: ?>
                     <i class="fa-solid fa-file-medical me-2 text-gold"></i>
                 <?php endif; ?>
