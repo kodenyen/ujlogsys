@@ -63,6 +63,10 @@ class Attendance extends Model {
             $sql .= " AND a.student_id = ?";
             $params[] = $filters['student_id'];
         }
+        if (!empty($filters['consultant_id'])) {
+            $sql .= " AND a.consultant_id = ?";
+            $params[] = $filters['consultant_id'];
+        }
         if (!empty($filters['dept_id'])) {
             $sql .= " AND s.department_id = ?";
             $params[] = $filters['dept_id'];

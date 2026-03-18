@@ -62,6 +62,10 @@ class LogActivityEntry extends Model {
             $sql .= " AND e.student_id = ?";
             $params[] = $filters['student_id'];
         }
+        if (!empty($filters['consultant_id'])) {
+            $sql .= " AND e.consultant_id = ?";
+            $params[] = $filters['consultant_id'];
+        }
         if (!empty($filters['dept_id'])) {
             $sql .= " AND t.department_id = ?";
             $params[] = $filters['dept_id'];

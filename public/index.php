@@ -46,6 +46,7 @@ $router->add('consultant/dashboard', 'ConsultantController', 'index');
 $router->add('consultant/confirmAttendance', 'ConsultantController', 'confirmAttendance');
 $router->add('consultant/confirmAllAttendance', 'ConsultantController', 'confirmAllAttendance');
 $router->add('consultant/approveLog', 'ConsultantController', 'approveLog');
+$router->add('consultant/reports', 'ConsultantController', 'reports');
 
 // Get URL and dispatch
 $url = '';

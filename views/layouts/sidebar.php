@@ -69,13 +69,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= BASE_URL ?>/admin/reports?report_type=attendance">
-                        <i class="fa-solid fa-calendar-check me-2"></i> Attendance Reports
+                    <a class="nav-link" href="<?= BASE_URL ?>/consultant/reports?report_type=attendance">
+                        <i class="fa-solid fa-calendar-check me-2"></i> My Verified Attendance
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= BASE_URL ?>/admin/reports?report_type=clinical_log">
-                        <i class="fa-solid fa-file-medical me-2"></i> Clinical Log Reports
+                    <a class="nav-link" href="<?= BASE_URL ?>/consultant/reports?report_type=clinical_log">
+                        <i class="fa-solid fa-file-medical me-2"></i> My Approved Logs
                     </a>
                 </li>
             <?php endif; ?>
