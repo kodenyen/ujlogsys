@@ -62,6 +62,6 @@ This guide provides instructions for setting up the Student Clinical Posting Log
 1. Login as Admin.
 2. Go to **App Settings** to upload your Organization Logo and set the Name.
 3. Go to **Departments** to create your clinical departments.
-4. Go to **Sections** to add clinical sections to those departments.
+4. Go to **Sessions** to add clinical sessions to those departments.
 5. Go to **Log Config** to define your dynamic clinical report fields and activity types.
 6. Register Students and Consultants under **Users**.

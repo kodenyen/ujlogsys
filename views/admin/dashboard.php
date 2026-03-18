@@ -51,8 +51,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="card-title text-uppercase mb-1 small fw-bold">Clinical Sections</h6>
-                            <h2 class="mb-0 fw-bold"><?= $section_count ?></h2>
+                            <h6 class="card-title text-uppercase mb-1 small fw-bold">Clinical Sessions</h6>
+                            <h2 class="mb-0 fw-bold"><?= $session_count ?></h2>
                         </div>
                         <i class="fa-solid fa-list-check fa-2x opacity-50"></i>
                     </div>
@@ -75,8 +75,8 @@
                         <a href="<?= BASE_URL ?>/admin/departments" class="list-group-item list-group-item-action py-3 d-flex align-items-center">
                             <i class="fa-solid fa-folder-plus me-3 text-success"></i> Manage Departments
                         </a>
-                        <a href="<?= BASE_URL ?>/admin/sections" class="list-group-item list-group-item-action py-3 d-flex align-items-center">
-                            <i class="fa-solid fa-layer-group me-3 text-info"></i> Configure Sections
+                        <a href="<?= BASE_URL ?>/admin/sessions" class="list-group-item list-group-item-action py-3 d-flex align-items-center">
+                            <i class="fa-solid fa-layer-group me-3 text-info"></i> Configure Sessions
                         </a>
                     </div>
                 </div>
