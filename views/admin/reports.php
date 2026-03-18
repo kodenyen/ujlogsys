@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <!-- Filters Section (Hidden when printing) -->
+    <!-- Filters Section -->
     <div class="card shadow-sm mb-4 border-0 no-print bg-white">
         <div class="card-body p-3">
             <form action="<?= BASE_URL ?>/admin/reports" method="GET" class="row g-2">
@@ -57,7 +57,7 @@
                     <select class="form-select form-select-sm" name="dept_id">
                         <option value="">All Depts</option>
                         <?php foreach ($departments as $dept): ?>
-                            <option value="<?= $dept['id'] ?>" <?= $filters['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars($dept['name'] ?? '') ?></option>
+                            <option value="<?= $dept['id'] ?>" <?= $filters['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars(str_ireplace(' SELECTED', '', $dept['name'] ?? '')) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -66,7 +66,7 @@
                     <select class="form-select form-select-sm" name="session_id">
                         <option value="">All Sessions</option>
                         <?php foreach ($sessions as $session): ?>
-                            <option value="<?= $session['id'] ?>" <?= $filters['session_id'] == $session['id'] ? 'selected' : '' ?>><?= htmlspecialchars($session['name'] ?? '') ?> (<?= htmlspecialchars($session['dept_name'] ?? '') ?>)</option>
+                            <option value="<?= $session['id'] ?>" <?= $filters['session_id'] == $session['id'] ? 'selected' : '' ?>><?= htmlspecialchars($session['name'] ?? '') ?> (<?= htmlspecialchars(str_ireplace(' SELECTED', '', $session['dept_name'] ?? '')) ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -101,7 +101,7 @@
                                     <td><?= date('d/m/Y', strtotime($row['attendance_date'])) ?></td>
                                     <td class="fw-bold"><?= htmlspecialchars($row['student_name'] ?? '') ?></td>
                                     <td>
-                                        <div class="small fw-bold text-navy"><?= htmlspecialchars($row['dept_name'] ?? '') ?></div>
+                                        <div class="small fw-bold text-navy"><?= htmlspecialchars(str_ireplace(' SELECTED', '', $row['dept_name'] ?? '')) ?></div>
                                         <div class="small text-muted italic"><?= htmlspecialchars($row['session_name'] ?? '') ?></div>
                                     </td>
                                     <td class="small"><?= htmlspecialchars($row['consultant_name'] ?? '') ?></td>
@@ -138,7 +138,7 @@
                                     <td class="fw-bold"><?= htmlspecialchars($row['student_name'] ?? '') ?></td>
                                     <td>
                                         <div class="small fw-bold text-success"><?= htmlspecialchars($row['type_name'] ?? '') ?></div>
-                                        <div class="small text-muted"><?= htmlspecialchars($row['dept_name'] ?? '') ?></div>
+                                        <div class="small text-muted"><?= htmlspecialchars(str_ireplace(' SELECTED', '', $row['dept_name'] ?? '')) ?></div>
                                     </td>
                                     <td class="small"><?= htmlspecialchars($row['consultant_name'] ?? '') ?></td>
                                     <td>
@@ -199,15 +199,15 @@
 
 <style>
 /* Dashboard Styling */
-.bg-navy { background-color: var(--primary-navy) !important; }
-.text-navy { color: var(--primary-navy) !important; }
+.bg-navy { background-color: #000080 !important; }
+.text-navy { color: #000080 !important; }
 .italic { font-style: italic; }
 .tiny { font-size: 0.7rem; }
 
 /* Print Header Specifics */
-.institution-name { font-size: 24px; font-weight: 900; color: var(--primary-navy); margin-top: 10px; letter-spacing: 1px; }
+.institution-name { font-size: 24px; font-weight: 900; color: #000080; margin-top: 10px; letter-spacing: 1px; }
 .college-name { font-size: 16px; font-weight: 600; color: #555; margin-bottom: 15px; }
-.header-divider { height: 4px; border-top: 2px solid var(--primary-navy); border-bottom: 1px solid var(--secondary-gold); width: 100%; margin: 0 auto; }
+.header-divider { height: 4px; border-top: 2px solid #000080; border-bottom: 1px solid #FFD700; width: 100%; margin: 0 auto; }
 .report-title { font-weight: 800; color: #333; letter-spacing: 2px; border: 1px solid #ddd; display: inline-block; padding: 5px 20px; background: #f9f9f9; }
 .report-logo { max-height: 100px; width: auto; }
 .report-meta { font-size: 12px; color: #666; margin-top: 10px; }
