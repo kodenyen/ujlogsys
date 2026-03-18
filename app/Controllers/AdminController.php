@@ -87,7 +87,9 @@ class AdminController extends Controller {
                     $stmt->execute([$_POST['id']]);
                 } elseif ($_POST['action'] === 'edit') {
                     $photo_name = $_POST['current_photo'] ?? null;
-                    if (!empty($_FILES['photo']['name'])) {
+                    if (!empty($_POST['photo_url'])) {
+                        $photo_name = $_POST['photo_url'];
+                    } elseif (!empty($_FILES['photo']['name'])) {
                         $photo_name = 'user_' . time() . "_" . basename($_FILES["photo"]["name"]);
                         move_uploaded_file($_FILES["photo"]["tmp_name"], __DIR__ . "/../../public/uploads/" . $photo_name);
                     }
@@ -105,7 +107,9 @@ class AdminController extends Controller {
                 }
             } else {
                 $photo_name = null;
-                if (!empty($_FILES['photo']['name'])) {
+                if (!empty($_POST['photo_url'])) {
+                    $photo_name = $_POST['photo_url'];
+                } elseif (!empty($_FILES['photo']['name'])) {
                     $photo_name = 'user_' . time() . "_" . basename($_FILES["photo"]["name"]);
                     move_uploaded_file($_FILES["photo"]["tmp_name"], __DIR__ . "/../../public/uploads/" . $photo_name);
                 }

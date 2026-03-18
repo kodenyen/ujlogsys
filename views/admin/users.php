@@ -81,9 +81,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-md-12 text-center mb-2">
-                                <label class="form-label d-block small fw-bold">User Photo</label>
-                                <input type="file" class="form-control form-control-sm mx-auto" name="photo" accept="image/*" style="max-width: 300px;">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">User Photo (Upload)</label>
+                                <input type="file" class="form-control form-control-sm" name="photo" accept="image/*">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">OR Photo URL</label>
+                                <input type="url" class="form-control form-control-sm" name="photo_url" placeholder="https://example.com/photo.jpg">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Full Name</label>
@@ -154,7 +158,8 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                         <td>
                             <div class="avatar-sm rounded-circle bg-light border" style="width: 40px; height: 40px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($user['photo'])): ?>
-                                    <img src="<?= BASE_URL ?>/uploads/<?= $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <?php $isUrl = filter_var($user['photo'], FILTER_VALIDATE_URL); ?>
+                                    <img src="<?= $isUrl ? $user['photo'] : BASE_URL . '/uploads/' . $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
                                 <?php else: ?>
                                     <i class="fa-solid fa-user text-muted" style="font-size: 20px;"></i>
                                 <?php endif; ?>
@@ -177,7 +182,7 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                 </form>
                             </div>
 
-                            <!-- Edit Modal (Inside Tab) -->
+                            <!-- Edit Modal -->
                             <div class="modal fade" id="editUserModal<?= $user['id'] ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content border-0 shadow">
@@ -194,13 +199,22 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                                     <div class="col-12 text-center mb-2">
                                                         <div class="avatar-lg rounded-circle bg-light border mx-auto mb-2" style="width: 80px; height: 80px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                                                             <?php if (!empty($user['photo'])): ?>
-                                                                <img src="<?= BASE_URL ?>/uploads/<?= $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                                                                <?php $isUrl = filter_var($user['photo'], FILTER_VALIDATE_URL); ?>
+                                                                <img src="<?= $isUrl ? $user['photo'] : BASE_URL . '/uploads/' . $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
                                                             <?php else: ?>
                                                                 <i class="fa-solid fa-user fa-2x text-muted"></i>
                                                             <?php endif; ?>
                                                         </div>
-                                                        <label class="form-label small fw-bold">Change Photo</label>
-                                                        <input type="file" class="form-control form-control-sm" name="photo" accept="image/*">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label small fw-bold">Update Photo (File)</label>
+                                                                <input type="file" class="form-control form-control-sm" name="photo" accept="image/*">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label small fw-bold">Update Photo (URL)</label>
+                                                                <input type="url" class="form-control form-control-sm" name="photo_url" placeholder="https://..." value="<?= (filter_var($user['photo'], FILTER_VALIDATE_URL)) ? $user['photo'] : '' ?>">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <label class="form-label small fw-bold">Full Name</label>
