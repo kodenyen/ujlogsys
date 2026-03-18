@@ -68,6 +68,28 @@
                         <i class="fa-solid fa-gauge me-2"></i> Dashboard
                     </a>
                 </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#pendingMenu">
+                        <span><i class="fa-solid fa-clock-rotate-left me-2"></i> Pending Approvals</span>
+                        <i class="fa-solid fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse show" id="pendingMenu">
+                        <ul class="nav flex-column ms-3 small">
+                            <li class="nav-item">
+                                <a class="nav-link py-1" href="<?= BASE_URL ?>/consultant/dashboard#attendance-table">
+                                    <i class="fa-solid fa-calendar-check me-2"></i> Attendance
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-1" href="<?= BASE_URL ?>/consultant/dashboard#logs-table">
+                                    <i class="fa-solid fa-file-medical me-2"></i> Clinical Logs
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="<?= BASE_URL ?>/consultant/reports?report_type=attendance">
                         <i class="fa-solid fa-calendar-check me-2"></i> My Verified Attendance
