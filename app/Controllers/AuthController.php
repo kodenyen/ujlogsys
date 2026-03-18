@@ -18,6 +18,7 @@ class AuthController extends Controller {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['full_name'] = $user['full_name'];
                 $_SESSION['role'] = $user['role'];
+                $_SESSION['photo'] = $user['photo'];
 
                 $this->redirectByRole($user['role']);
             } else {

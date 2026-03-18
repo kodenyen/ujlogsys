@@ -2,10 +2,10 @@
     <div class="position-sticky pt-3">
         <div class="text-center mb-4 px-3">
             <div class="avatar-circle mx-auto mb-2" style="width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--secondary-gold); overflow: hidden;">
-                <?php if (!empty($settings['org_logo'])): ?>
-                    <img src="<?= BASE_URL ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <?php if (!empty($_SESSION['photo'])): ?>
+                    <img src="<?= BASE_URL ?>/uploads/<?= $_SESSION['photo'] ?>" alt="User Photo" style="width: 100%; height: 100%; object-fit: cover;">
                 <?php else: ?>
-                    <i class="fa-solid fa-hospital fa-2x text-primary"></i>
+                    <i class="fa-solid fa-user-doctor fa-2x text-primary"></i>
                 <?php endif; ?>
             </div>
             <h6 class="text-white mb-0"><?= $_SESSION['full_name'] ?? 'User' ?></h6>

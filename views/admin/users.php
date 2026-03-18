@@ -74,13 +74,17 @@
     <div class="modal fade" id="addUserModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content border-0 shadow">
-                <form action="<?= BASE_URL ?>/admin/users" method="POST">
+                <form action="<?= BASE_URL ?>/admin/users" method="POST" enctype="multipart/form-data">
                     <div class="modal-header bg-navy text-white">
                         <h5 class="modal-title">Register New User</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
+                            <div class="col-md-12 text-center mb-2">
+                                <label class="form-label d-block small fw-bold">User Photo</label>
+                                <input type="file" class="form-control form-control-sm mx-auto" name="photo" accept="image/*" style="max-width: 300px;">
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Full Name</label>
                                 <input type="text" class="form-control form-control-sm" name="full_name" required>
@@ -132,6 +136,7 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
         <table class="table table-hover align-middle small">
             <thead class="table-light">
                 <tr>
+                    <th>Photo</th>
                     <th>Full Name</th>
                     <th>ID Number</th>
                     <?php if ($showRole): ?><th>Role</th><?php endif; ?>
@@ -142,10 +147,19 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
-                    <tr><td colspan="<?= $showRole ? 6 : 5 ?>" class="text-center py-4 text-muted italic">No users found in this category.</td></tr>
+                    <tr><td colspan="<?= $showRole ? 7 : 6 ?>" class="text-center py-4 text-muted italic">No users found in this category.</td></tr>
                 <?php endif; ?>
                 <?php foreach ($users as $user): ?>
                     <tr>
+                        <td>
+                            <div class="avatar-sm rounded-circle bg-light border" style="width: 40px; height: 40px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <?php if (!empty($user['photo'])): ?>
+                                    <img src="<?= BASE_URL ?>/uploads/<?= $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php else: ?>
+                                    <i class="fa-solid fa-user text-muted" style="font-size: 20px;"></i>
+                                <?php endif; ?>
+                            </div>
+                        </td>
                         <td class="fw-bold"><?= htmlspecialchars($user['full_name'] ?? '') ?></td>
                         <td><?= htmlspecialchars($user['matric_staff_id'] ?? '') ?></td>
                         <?php if ($showRole): ?>
@@ -167,15 +181,27 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                             <div class="modal fade" id="editUserModal<?= $user['id'] ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content border-0 shadow">
-                                        <form action="<?= BASE_URL ?>/admin/users" method="POST">
+                                        <form action="<?= BASE_URL ?>/admin/users" method="POST" enctype="multipart/form-data">
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                            <input type="hidden" name="current_photo" value="<?= $user['photo'] ?>">
                                             <div class="modal-header bg-primary text-white">
                                                 <h6 class="modal-title">Edit User: <?= htmlspecialchars($user['username'] ?? '') ?></h6>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 <div class="row g-2">
+                                                    <div class="col-12 text-center mb-2">
+                                                        <div class="avatar-lg rounded-circle bg-light border mx-auto mb-2" style="width: 80px; height: 80px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                                            <?php if (!empty($user['photo'])): ?>
+                                                                <img src="<?= BASE_URL ?>/uploads/<?= $user['photo'] ?>" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                                                            <?php else: ?>
+                                                                <i class="fa-solid fa-user fa-2x text-muted"></i>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <label class="form-label small fw-bold">Change Photo</label>
+                                                        <input type="file" class="form-control form-control-sm" name="photo" accept="image/*">
+                                                    </div>
                                                     <div class="col-12">
                                                         <label class="form-label small fw-bold">Full Name</label>
                                                         <input type="text" class="form-control form-control-sm" name="full_name" value="<?= htmlspecialchars($user['full_name'] ?? '') ?>" required>

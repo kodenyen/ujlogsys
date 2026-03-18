@@ -86,18 +86,30 @@ class AdminController extends Controller {
                     $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("DELETE FROM users WHERE id = ?");
                     $stmt->execute([$_POST['id']]);
                 } elseif ($_POST['action'] === 'edit') {
-                    $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ? WHERE id = ?";
-                    $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, $_POST['id']];
+                    $photo_name = $_POST['current_photo'] ?? null;
+                    if (!empty($_FILES['photo']['name'])) {
+                        $photo_name = 'user_' . time() . "_" . basename($_FILES["photo"]["name"]);
+                        move_uploaded_file($_FILES["photo"]["tmp_name"], __DIR__ . "/../../public/uploads/" . $photo_name);
+                    }
+
+                    $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ?, photo = ? WHERE id = ?";
+                    $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, $photo_name, $_POST['id']];
                     
                     if (!empty($_POST['password'])) {
-                        $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ?, password_hash = ? WHERE id = ?";
-                        $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, password_hash($_POST['password'], PASSWORD_DEFAULT), $_POST['id']];
+                        $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ?, photo = ?, password_hash = ? WHERE id = ?";
+                        $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, $photo_name, password_hash($_POST['password'], PASSWORD_DEFAULT), $_POST['id']];
                     }
                     
                     $stmt = \App\Core\Database::getInstance()->getConnection()->prepare($sql);
                     $stmt->execute($params);
                 }
             } else {
+                $photo_name = null;
+                if (!empty($_FILES['photo']['name'])) {
+                    $photo_name = 'user_' . time() . "_" . basename($_FILES["photo"]["name"]);
+                    move_uploaded_file($_FILES["photo"]["tmp_name"], __DIR__ . "/../../public/uploads/" . $photo_name);
+                }
+
                 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                 $data = [
                     'full_name' => $_POST['full_name'],
@@ -105,7 +117,7 @@ class AdminController extends Controller {
                     'password_hash' => $password,
                     'role' => $_POST['role'],
                     'matric_staff_id' => $_POST['matric_staff_id'],
-                    'photo' => null,
+                    'photo' => $photo_name,
                     'dept_id' => $_POST['dept_id'] ?: null
                 ];
                 $userModel->create($data);
