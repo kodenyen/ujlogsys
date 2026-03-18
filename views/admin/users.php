@@ -146,12 +146,12 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                 <?php endif; ?>
                 <?php foreach ($users as $user): ?>
                     <tr>
-                        <td class="fw-bold"><?= htmlspecialchars($user['full_name']) ?></td>
-                        <td><?= htmlspecialchars($user['matric_staff_id']) ?></td>
+                        <td class="fw-bold"><?= htmlspecialchars($user['full_name'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($user['matric_staff_id'] ?? '') ?></td>
                         <?php if ($showRole): ?>
                             <td><span class="badge bg-info text-dark"><?= $user['role'] ?></span></td>
                         <?php endif; ?>
-                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['username'] ?? '') ?></td>
                         <td class="small text-muted"><?= htmlspecialchars($user['dept_name'] ?? 'N/A') ?></td>
                         <td>
                             <div class="btn-group">
@@ -171,18 +171,18 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                             <div class="modal-header bg-primary text-white">
-                                                <h6 class="modal-title">Edit User: <?= htmlspecialchars($user['username']) ?></h6>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                <h6 class="modal-title">Edit User: <?= htmlspecialchars($user['username'] ?? '') ?></h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 <div class="row g-2">
                                                     <div class="col-12">
                                                         <label class="form-label small fw-bold">Full Name</label>
-                                                        <input type="text" class="form-control form-control-sm" name="full_name" value="<?= htmlspecialchars($user['full_name']) ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="full_name" value="<?= htmlspecialchars($user['full_name'] ?? '') ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Username</label>
-                                                        <input type="text" class="form-control form-control-sm" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Role</label>
@@ -195,14 +195,14 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">ID Number</label>
-                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= htmlspecialchars($user['matric_staff_id']) ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= htmlspecialchars($user['matric_staff_id'] ?? '') ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Department</label>
                                                         <select class="form-select form-select-sm" name="dept_id">
                                                             <option value="">None</option>
                                                             <?php foreach ($departments as $dept): ?>
-                                                                <option value="<?= $dept['id'] ?>" <?= $user['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars($dept['name']) ?></option>
+                                                                <option value="<?= $dept['id'] ?>" <?= $user['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars($dept['name'] ?? '') ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
