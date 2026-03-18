@@ -30,6 +30,12 @@
                             <input type="text" class="form-control" name="org_name" value="<?= htmlspecialchars($current_settings['org_name']) ?>" required>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Footer Copyright Text</label>
+                            <input type="text" class="form-control" name="footer_text" value="<?= htmlspecialchars($current_settings['footer_text'] ?? '') ?>" placeholder="e.g. 2026 Your College. All rights reserved.">
+                            <small class="text-muted">This appears at the bottom of every page.</small>
+                        </div>
+
                         <div class="mb-4">
                             <label class="form-label fw-bold">Upload New Logo</label>
                             <input type="file" class="form-control" name="org_logo" accept="image/*">

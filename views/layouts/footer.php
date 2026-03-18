@@ -3,9 +3,9 @@
     </div> <!-- container-fluid -->
     <?php endif; ?>
 
-    <footer class="bg-white py-3 text-center mt-auto border-top">
+    <footer class="bg-white py-3 text-center mt-auto border-top no-print">
         <div class="container text-muted small">
-            &copy; <?= date('Y') ?> UJ Medical College of Health Science. All rights reserved.
+            &copy; <?= date('Y') ?> <?= htmlspecialchars($settings['footer_text'] ?? ($settings['org_name'] ?? 'UJ Medical College of Health Science. All rights reserved.')) ?>
         </div>
     </footer>
 

@@ -10,13 +10,13 @@ class Setting extends Model {
         return $stmt->fetch();
     }
 
-    public function update($org_name, $org_logo = null) {
+    public function update($org_name, $footer_text, $org_logo = null) {
         if ($org_logo) {
-            $stmt = $this->db->prepare("UPDATE settings SET org_name = ?, org_logo = ? WHERE id = 1");
-            return $stmt->execute([$org_name, $org_logo]);
+            $stmt = $this->db->prepare("UPDATE settings SET org_name = ?, footer_text = ?, org_logo = ? WHERE id = 1");
+            return $stmt->execute([$org_name, $footer_text, $org_logo]);
         } else {
-            $stmt = $this->db->prepare("UPDATE settings SET org_name = ? WHERE id = 1");
-            return $stmt->execute([$org_name]);
+            $stmt = $this->db->prepare("UPDATE settings SET org_name = ?, footer_text = ? WHERE id = 1");
+            return $stmt->execute([$org_name, $footer_text]);
         }
     }
 }

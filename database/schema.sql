@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS settings (
     id INT PRIMARY KEY,
     org_name VARCHAR(255) NOT NULL,
     org_logo VARCHAR(255) NULL,
+    footer_text VARCHAR(255) DEFAULT 'UJ Medical College of Health Science. All rights reserved.',
     theme_primary VARCHAR(50) DEFAULT '#000080',
     theme_secondary VARCHAR(50) DEFAULT '#FFD700'
 );

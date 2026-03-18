@@ -245,6 +245,7 @@ class AdminController extends Controller {
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $org_name = $_POST['org_name'];
+            $footer_text = $_POST['footer_text'];
             $logo_name = null;
 
             if (!empty($_FILES['org_logo']['name'])) {
@@ -256,7 +257,7 @@ class AdminController extends Controller {
                 move_uploaded_file($_FILES["org_logo"]["tmp_name"], $target_dir . $logo_name);
             }
 
-            $settingModel->update($org_name, $logo_name);
+            $settingModel->update($org_name, $footer_text, $logo_name);
             $this->redirect('/admin/settings');
         }
 
