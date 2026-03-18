@@ -15,28 +15,28 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-2">
                     <ul class="nav nav-tabs card-header-tabs small fw-bold" id="userTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#students" type="button">Students</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#lecturers" type="button">Lecturers</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#consultants" type="button">Consultants</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tutors" type="button">Tutors</button></li>
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-students" type="button">Students</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lecturers" type="button">Lecturers</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-consultants" type="button">Consultants</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tutors" type="button">Tutors</button></li>
                     </ul>
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="userTabsContent">
                         <!-- Students Tab -->
-                        <div class="tab-pane fade show active" id="students" role="tabpanel">
+                        <div class="tab-pane fade show active" id="tab-students" role="tabpanel">
                             <?php renderUserTable($students, $departments); ?>
                         </div>
                         <!-- Lecturers Tab -->
-                        <div class="tab-pane fade" id="lecturers" role="tabpanel">
+                        <div class="tab-pane fade" id="tab-lecturers" role="tabpanel">
                             <?php renderUserTable($lecturers, $departments); ?>
                         </div>
                         <!-- Consultants Tab -->
-                        <div class="tab-pane fade" id="consultants" role="tabpanel">
+                        <div class="tab-pane fade" id="tab-consultants" role="tabpanel">
                             <?php renderUserTable($consultants, $departments); ?>
                         </div>
                         <!-- Tutors Tab -->
-                        <div class="tab-pane fade" id="tutors" role="tabpanel">
+                        <div class="tab-pane fade" id="tab-tutors" role="tabpanel">
                             <?php renderUserTable($tutors, $departments); ?>
                         </div>
                     </div>
@@ -114,6 +114,9 @@ function renderUserTable($users, $departments) { ?>
                 </tr>
             </thead>
             <tbody>
+                <?php if (empty($users)): ?>
+                    <tr><td colspan="4" class="text-center py-3 text-muted">No users found in this category.</td></tr>
+                <?php endif; ?>
                 <?php foreach ($users as $user): ?>
                     <tr>
                         <td class="fw-bold"><?= $user['full_name'] ?></td>
@@ -130,25 +133,25 @@ function renderUserTable($users, $departments) { ?>
                             </div>
 
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editUser<?= $user['id'] ?>" tabindex="-1">
+                            <div class="modal fade" id="editUser<?= $user['id'] ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <form action="<?= BASE_URL ?>/admin/users" method="POST">
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                             <div class="modal-header">
-                                                <h6 class="modal-title">Edit User: <?= $user['username'] ?></h6>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <h6 class="modal-title">Edit User: <?= htmlspecialchars($user['username']) ?></h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 <div class="row g-2">
                                                     <div class="col-12">
                                                         <label class="form-label small fw-bold">Full Name</label>
-                                                        <input type="text" class="form-control form-control-sm" name="full_name" value="<?= $user['full_name'] ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="full_name" value="<?= htmlspecialchars($user['full_name']) ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Username</label>
-                                                        <input type="text" class="form-control form-control-sm" name="username" value="<?= $user['username'] ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Role</label>
@@ -161,14 +164,14 @@ function renderUserTable($users, $departments) { ?>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">ID Number</label>
-                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= $user['matric_staff_id'] ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= htmlspecialchars($user['matric_staff_id']) ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Department</label>
                                                         <select class="form-select form-select-sm" name="dept_id">
                                                             <option value="">None</option>
                                                             <?php foreach ($departments as $dept): ?>
-                                                                <option value="<?= $dept['id'] ?>" <?= $user['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= $dept['name'] ?></option>
+                                                                <option value="<?= $dept['id'] ?>" <?= $user['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars($dept['name']) ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
