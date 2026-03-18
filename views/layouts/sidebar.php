@@ -12,6 +12,8 @@
             <small class="text-warning"><?= $_SESSION['role'] ?? '' ?></small>
         </div>
 
+        <hr class="mx-3" style="background-color: var(--secondary-gold); height: 2px; opacity: 0.3; margin-top: 0; margin-bottom: 20px;">
+
         <ul class="nav flex-column">
             <?php if ($_SESSION['role'] === 'Admin'): ?>
                 <li class="nav-item">
