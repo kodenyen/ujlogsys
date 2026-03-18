@@ -21,6 +21,11 @@
                             </button>
                         </li>
                         <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-admins" type="button">
+                                Admins <span class="badge bg-danger ms-1"><?= count($admins) ?></span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-students" type="button">
                                 Students <span class="badge bg-secondary ms-1"><?= count($students) ?></span>
                             </button>
@@ -44,23 +49,21 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="userTabsContent">
-                        <!-- All Users Tab -->
                         <div class="tab-pane fade show active" id="tab-all" role="tabpanel">
                             <?php renderUserTable($all_users, $departments, true); ?>
                         </div>
-                        <!-- Students Tab -->
+                        <div class="tab-pane fade" id="tab-admins" role="tabpanel">
+                            <?php renderUserTable($admins, $departments); ?>
+                        </div>
                         <div class="tab-pane fade" id="tab-students" role="tabpanel">
                             <?php renderUserTable($students, $departments); ?>
                         </div>
-                        <!-- Lecturers Tab -->
                         <div class="tab-pane fade" id="tab-lecturers" role="tabpanel">
                             <?php renderUserTable($lecturers, $departments); ?>
                         </div>
-                        <!-- Consultants Tab -->
                         <div class="tab-pane fade" id="tab-consultants" role="tabpanel">
                             <?php renderUserTable($consultants, $departments); ?>
                         </div>
-                        <!-- Tutors Tab -->
                         <div class="tab-pane fade" id="tab-tutors" role="tabpanel">
                             <?php renderUserTable($tutors, $departments); ?>
                         </div>
@@ -96,6 +99,7 @@
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Role</label>
                                 <select class="form-select form-select-sm" name="role" required>
+                                    <option value="Admin">Admin</option>
                                     <option value="Student">Student</option>
                                     <option value="Lecturer">Lecturer</option>
                                     <option value="Consultant">Consultant</option>
@@ -111,8 +115,8 @@
                                 <input type="password" class="form-control form-control-sm" name="password" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Matric / Staff ID</label>
-                                <input type="text" class="form-control form-control-sm" name="matric_staff_id" required>
+                                <label class="form-label small fw-bold">Matric / Staff ID (Optional for Admins)</label>
+                                <input type="text" class="form-control form-control-sm" name="matric_staff_id">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Department</label>
@@ -166,7 +170,7 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                             </div>
                         </td>
                         <td class="fw-bold"><?= htmlspecialchars($user['full_name'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($user['matric_staff_id'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($user['matric_staff_id'] ?? 'N/A') ?></td>
                         <?php if ($showRole): ?>
                             <td><span class="badge bg-info text-dark"><?= $user['role'] ?></span></td>
                         <?php endif; ?>
@@ -175,11 +179,13 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-outline-primary py-0" data-bs-toggle="modal" data-bs-target="#editUserModal<?= $user['id'] ?>">Edit</button>
+                                <?php if ($user['id'] != $_SESSION['user_id']): // Prevent self-deletion ?>
                                 <form action="<?= BASE_URL ?>/admin/users" method="POST" class="d-inline" onsubmit="return confirm('Delete this user?')">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                     <button type="submit" class="btn btn-sm btn-link text-danger py-0"><i class="fa-solid fa-trash"></i></button>
                                 </form>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Edit Modal -->
@@ -227,6 +233,7 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Role</label>
                                                         <select class="form-select form-select-sm" name="role" required>
+                                                            <option value="Admin" <?= $user['role'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
                                                             <option value="Student" <?= $user['role'] === 'Student' ? 'selected' : '' ?>>Student</option>
                                                             <option value="Lecturer" <?= $user['role'] === 'Lecturer' ? 'selected' : '' ?>>Lecturer</option>
                                                             <option value="Consultant" <?= $user['role'] === 'Consultant' ? 'selected' : '' ?>>Consultant</option>
@@ -235,7 +242,7 @@ function renderUserTable($users, $departments, $showRole = false) { ?>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">ID Number</label>
-                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= htmlspecialchars($user['matric_staff_id'] ?? '') ?>" required>
+                                                        <input type="text" class="form-control form-control-sm" name="matric_staff_id" value="<?= htmlspecialchars($user['matric_staff_id'] ?? '') ?>">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label small fw-bold">Department</label>

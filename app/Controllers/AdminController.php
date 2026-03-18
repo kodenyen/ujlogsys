@@ -136,6 +136,7 @@ class AdminController extends Controller {
             'lecturers' => $userModel->getAllByRole('Lecturer'),
             'consultants' => $userModel->getAllByRole('Consultant'),
             'tutors' => $userModel->getAllByRole('Tutor'),
+            'admins' => $userModel->getAllByRole('Admin'),
             'departments' => $deptModel->getAll()
         ]);
     }
