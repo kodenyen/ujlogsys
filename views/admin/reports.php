@@ -18,7 +18,8 @@
     <div class="print-only">
         <div class="report-header text-center mb-4">
             <?php if (!empty($branding['org_logo'])): ?>
-                <img src="<?= BASE_URL ?>/uploads/<?= $branding['org_logo'] ?>" alt="Institution Logo" class="report-logo mb-3">
+                <?php $logoUrl = filter_var($branding['org_logo'], FILTER_VALIDATE_URL) ? $branding['org_logo'] : BASE_URL . '/uploads/' . $branding['org_logo']; ?>
+                <img src="<?= $logoUrl ?>" alt="Institution Logo" class="report-logo mb-3">
             <?php endif; ?>
             <h1 class="institution-name"><?= strtoupper($branding['org_name'] ?? APP_NAME) ?></h1>
             <h4 class="college-name">COLLEGE OF HEALTH SCIENCES</h4>

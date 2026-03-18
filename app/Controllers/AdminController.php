@@ -247,7 +247,7 @@ class AdminController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $org_name = $_POST['org_name'];
             $footer_text = $_POST['footer_text'];
-            $logo_name = null;
+            $logo_name = $_POST['logo_url'] ?? null;
 
             if (!empty($_FILES['org_logo']['name'])) {
                 $target_dir = __DIR__ . "/../../public/uploads/";

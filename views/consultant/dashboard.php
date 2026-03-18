@@ -1,9 +1,6 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 <?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
 
-<!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Consultant Dashboard</h1>
@@ -58,28 +55,16 @@
     </div>
 
     <div class="row mb-4">
-        <!-- Activity Graph -->
-        <div class="col-md-8">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white py-3 d-flex align-items-center">
-                    <h6 class="mb-0 fw-bold text-navy"><i class="fa-solid fa-chart-line me-2 text-gold"></i>Verification Trends (Last 6 Months)</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="verificationChart" height="250"></canvas>
-                </div>
-            </div>
-        </div>
-        
         <!-- Quick Help / Profile -->
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="card shadow-sm bg-navy text-white h-100 border-0">
-                <div class="card-body d-flex flex-column justify-content-center text-center">
+                <div class="card-body d-flex flex-column justify-content-center text-center py-5">
                     <div class="mb-3">
-                        <i class="fa-solid fa-shield-halved fa-3x text-gold"></i>
+                        <i class="fa-solid fa-shield-halved fa-4x text-gold"></i>
                     </div>
-                    <h5>Secure Approval Mode</h5>
-                    <p class="small opacity-75">All student clinical records require your account password for final verification to ensure data integrity.</p>
-                    <a href="<?= BASE_URL ?>/consultant/reports?report_type=clinical_log" class="btn btn-outline-light btn-sm mt-2">View My Full History</a>
+                    <h4>Secure Approval Mode</h4>
+                    <p class="opacity-75">All student clinical records require your account password for final verification to ensure data integrity.</p>
+                    <a href="<?= BASE_URL ?>/consultant/reports?report_type=clinical_log" class="btn btn-outline-light btn-sm mt-3 px-4">View My Full History</a>
                 </div>
             </div>
         </div>
@@ -241,36 +226,5 @@
         </div>
     </div>
 </main>
-
-<script>
-const ctx = document.getElementById('verificationChart').getContext('2d');
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: <?= json_encode(array_column($chart_data, 'month')) ?>,
-        datasets: [{
-            label: 'Students Verified',
-            data: <?= json_encode(array_column($chart_data, 'count')) ?>,
-            borderColor: '#000080',
-            backgroundColor: 'rgba(255, 215, 0, 0.1)',
-            fill: true,
-            tension: 0.4,
-            borderWidth: 3,
-            pointRadius: 5,
-            pointBackgroundColor: '#FFD700'
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false }
-        },
-        scales: {
-            y: { beginAtZero: true, grid: { display: false } },
-            x: { grid: { display: false } }
-        }
-    }
-});
-</script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

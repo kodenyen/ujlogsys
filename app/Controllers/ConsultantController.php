@@ -17,15 +17,6 @@ class ConsultantController extends Controller {
         $logModel = new \App\Models\LogActivityEntry();
         $db = \App\Core\Database::getInstance()->getConnection();
 
-        // Get monthly activity for the graph
-        $graphQuery = $db->prepare("
-            SELECT DATE_FORMAT(attendance_date, '%b') as month, COUNT(*) as count 
-            FROM attendance_records 
-            WHERE consultant_id = ? AND is_confirmed = 1
-            GROUP BY month ORDER BY attendance_date DESC LIMIT 6
-        ");
-        $graphQuery->execute([$_SESSION['user_id']]);
-        
         $this->render('consultant/dashboard', [
             'title' => 'Consultant Dashboard',
             'pending_attendance' => $attendanceModel->getPendingConsultantConfirmations($_SESSION['user_id']),
@@ -33,8 +24,7 @@ class ConsultantController extends Controller {
             'stats' => [
                 'total_verified' => $db->query("SELECT COUNT(*) FROM attendance_records WHERE consultant_id = {$_SESSION['user_id']} AND is_confirmed = 1")->fetchColumn(),
                 'total_logs' => $db->query("SELECT COUNT(*) FROM log_activity_entries WHERE consultant_id = {$_SESSION['user_id']} AND is_approved = 1")->fetchColumn()
-            ],
-            'chart_data' => array_reverse($graphQuery->fetchAll())
+            ]
         ]);
     }
 

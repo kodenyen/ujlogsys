@@ -37,9 +37,18 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Upload New Logo</label>
-                            <input type="file" class="form-control" name="org_logo" accept="image/*">
-                            <small class="text-muted">Recommended: Square image with transparent background (PNG/WEBP).</small>
+                            <label class="form-label fw-bold">Update Logo</label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">Upload File</small>
+                                    <input type="file" class="form-control form-control-sm" name="org_logo" accept="image/*">
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">OR Paste URL</small>
+                                    <input type="url" class="form-control form-control-sm" name="logo_url" placeholder="https://..." value="<?= (!empty($current_settings['org_logo']) && filter_var($current_settings['org_logo'], FILTER_VALIDATE_URL)) ? $current_settings['org_logo'] : '' ?>">
+                                </div>
+                            </div>
+                            <small class="text-muted mt-2 d-block">Recommended: Square/Wide logo with transparent background.</small>
                         </div>
 
                         <div class="border-top pt-3">

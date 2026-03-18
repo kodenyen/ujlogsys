@@ -40,7 +40,8 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= BASE_URL ?>">
                 <?php if (!empty($settings['org_logo'])): ?>
-                    <img src="<?= $baseUrl ?>/uploads/<?= $settings['org_logo'] ?>" alt="Logo" height="35" class="me-2">
+                    <?php $logoUrl = filter_var($settings['org_logo'], FILTER_VALIDATE_URL) ? $settings['org_logo'] : $baseUrl . '/uploads/' . $settings['org_logo']; ?>
+                    <img src="<?= $logoUrl ?>" alt="Logo" height="35" class="me-2">
                 <?php else: ?>
                     <i class="fa-solid fa-file-medical me-2"></i>
                 <?php endif; ?>
