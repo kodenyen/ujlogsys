@@ -49,7 +49,7 @@
                     <select class="form-select form-select-sm" name="student_id">
                         <option value="">All Students</option>
                         <?php foreach ($students as $student): ?>
-                            <option value="<?= $student['id'] ?>" <?= $filters['student_id'] == $student['id'] ? 'selected' : '' ?>><?= $student['full_name'] ?></option>
+                            <option value="<?= $student['id'] ?>" <?= $filters['student_id'] == $student['id'] ? 'selected' : '' ?>><?= htmlspecialchars($student['full_name'] ?? '') ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -58,7 +58,7 @@
                     <select class="form-select form-select-sm" name="dept_id">
                         <option value="">All Depts</option>
                         <?php foreach ($departments as $dept): ?>
-                            <option value="<?= $dept['id'] ?>" <?= $filters['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= $dept['name'] ?></option>
+                            <option value="<?= $dept['id'] ?>" <?= $filters['dept_id'] == $dept['id'] ? 'selected' : '' ?>><?= htmlspecialchars($dept['name'] ?? '') ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -67,7 +67,7 @@
                     <select class="form-select form-select-sm" name="session_id">
                         <option value="">All Sessions</option>
                         <?php foreach ($sessions as $session): ?>
-                            <option value="<?= $session['id'] ?>" <?= $filters['session_id'] == $session['id'] ? 'selected' : '' ?>><?= $session['name'] ?> (<?= $session['dept_name'] ?>)</option>
+                            <option value="<?= $session['id'] ?>" <?= $filters['session_id'] == $session['id'] ? 'selected' : '' ?>><?= htmlspecialchars($session['name'] ?? '') ?> (<?= htmlspecialchars($session['dept_name'] ?? '') ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -86,6 +86,7 @@
                     <table class="table table-sm table-bordered table-hover align-middle mb-0">
                         <thead class="bg-navy text-white">
                             <tr>
+                                <th>S/N</th>
                                 <th>Date</th>
                                 <th>Student</th>
                                 <th>Dept / Session</th>
@@ -95,15 +96,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($records as $row): ?>
+                            <?php foreach ($records as $index => $row): ?>
                                 <tr>
+                                    <td><?= $index + 1 ?></td>
                                     <td><?= date('d/m/Y', strtotime($row['attendance_date'])) ?></td>
-                                    <td class="fw-bold"><?= $row['student_name'] ?></td>
+                                    <td class="fw-bold"><?= htmlspecialchars($row['student_name'] ?? '') ?></td>
                                     <td>
-                                        <div class="small fw-bold text-navy"><?= $row['dept_name'] ?></div>
-                                        <div class="small text-muted"><?= $row['session_name'] ?></div>
+                                        <div class="small fw-bold text-navy"><?= htmlspecialchars($row['dept_name'] ?? '') ?></div>
+                                        <div class="small text-muted"><?= htmlspecialchars($row['session_name'] ?? '') ?></div>
                                     </td>
-                                    <td class="small"><?= $row['consultant_name'] ?></td>
+                                    <td class="small"><?= htmlspecialchars($row['consultant_name'] ?? '') ?></td>
                                     <td><span class="badge <?= $row['status'] === 'Present' ? 'bg-success' : 'bg-danger' ?>"><?= $row['status'] ?></span></td>
                                     <td class="text-center">
                                         <?php if ($row['is_confirmed']): ?>
@@ -120,6 +122,7 @@
                     <table class="table table-sm table-bordered table-hover align-middle mb-0">
                         <thead class="bg-success text-white">
                             <tr>
+                                <th>S/N</th>
                                 <th>ID</th>
                                 <th>Student</th>
                                 <th>Activity / Dept</th>
@@ -129,20 +132,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($records as $row): ?>
+                            <?php foreach ($records as $index => $row): ?>
                                 <tr>
+                                    <td><?= $index + 1 ?></td>
                                     <td>#<?= $row['id'] ?></td>
-                                    <td class="fw-bold"><?= $row['student_name'] ?></td>
+                                    <td class="fw-bold"><?= htmlspecialchars($row['student_name'] ?? '') ?></td>
                                     <td>
-                                        <div class="small fw-bold text-success"><?= $row['type_name'] ?></div>
-                                        <div class="small text-muted"><?= $row['dept_name'] ?></div>
+                                        <div class="small fw-bold text-success"><?= htmlspecialchars($row['type_name'] ?? '') ?></div>
+                                        <div class="small text-muted"><?= htmlspecialchars($row['dept_name'] ?? '') ?></div>
                                     </td>
-                                    <td class="small"><?= $row['consultant_name'] ?></td>
+                                    <td class="small"><?= htmlspecialchars($row['consultant_name'] ?? '') ?></td>
                                     <td>
                                         <div class="small p-1 bg-light rounded" style="max-width: 250px;">
                                             <?php $details = json_decode($row['data_json'], true); ?>
                                             <?php foreach($details as $k => $v): ?>
-                                                <div class="text-truncate"><strong><?= str_replace('_', ' ', $k) ?>:</strong> <?= $v ?></div>
+                                                <div class="text-truncate"><strong><?= str_replace('_', ' ', $k) ?>:</strong> <?= htmlspecialchars($v ?? '') ?></div>
                                             <?php endforeach; ?>
                                         </div>
                                     </td>
