@@ -115,6 +115,7 @@ class AdminController extends Controller {
 
         $this->render('admin/users', [
             'title' => 'User Management',
+            'all_users' => \App\Core\Database::getInstance()->getConnection()->query("SELECT u.*, d.name as dept_name FROM users u LEFT JOIN departments d ON u.dept_id = d.id ORDER BY u.full_name ASC")->fetchAll(),
             'students' => $userModel->getAllByRole('Student'),
             'lecturers' => $userModel->getAllByRole('Lecturer'),
             'consultants' => $userModel->getAllByRole('Consultant'),

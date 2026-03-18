@@ -15,16 +15,41 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-2">
                     <ul class="nav nav-tabs card-header-tabs small fw-bold" id="userTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-students" type="button">Students</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lecturers" type="button">Lecturers</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-consultants" type="button">Consultants</button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tutors" type="button">Tutors</button></li>
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-all" type="button">
+                                All Users <span class="badge bg-secondary ms-1"><?= count($all_users) ?></span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-students" type="button">
+                                Students <span class="badge bg-secondary ms-1"><?= count($students) ?></span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lecturers" type="button">
+                                Lecturers <span class="badge bg-secondary ms-1"><?= count($lecturers) ?></span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-consultants" type="button">
+                                Consultants <span class="badge bg-secondary ms-1"><?= count($consultants) ?></span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tutors" type="button">
+                                Tutors <span class="badge bg-secondary ms-1"><?= count($tutors) ?></span>
+                            </button>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="userTabsContent">
+                        <!-- All Users Tab -->
+                        <div class="tab-pane fade show active" id="tab-all" role="tabpanel">
+                            <?php renderUserTable($all_users, $departments, true); ?>
+                        </div>
                         <!-- Students Tab -->
-                        <div class="tab-pane fade show active" id="tab-students" role="tabpanel">
+                        <div class="tab-pane fade" id="tab-students" role="tabpanel">
                             <?php renderUserTable($students, $departments); ?>
                         </div>
                         <!-- Lecturers Tab -->
@@ -48,11 +73,11 @@
     <!-- Add User Modal -->
     <div class="modal fade" id="addUserModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow">
                 <form action="<?= BASE_URL ?>/admin/users" method="POST">
-                    <div class="modal-header">
+                    <div class="modal-header bg-navy text-white">
                         <h5 class="modal-title">Register New User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
@@ -86,14 +111,14 @@
                                 <select class="form-select form-select-sm" name="dept_id">
                                     <option value="">Select Department</option>
                                     <?php foreach ($departments as $dept): ?>
-                                        <option value="<?= $dept['id'] ?>"><?= $dept['name'] ?></option>
+                                        <option value="<?= $dept['id'] ?>"><?= htmlspecialchars($dept['name']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-sm px-4">Register User</button>
+                    <div class="modal-footer bg-light">
+                        <button type="submit" class="btn btn-primary btn-sm px-4 fw-bold">Register User</button>
                     </div>
                 </form>
             </div>
@@ -102,29 +127,35 @@
 </main>
 
 <?php 
-function renderUserTable($users, $departments) { ?>
+function renderUserTable($users, $departments, $showRole = false) { ?>
     <div class="table-responsive">
         <table class="table table-hover align-middle small">
             <thead class="table-light">
                 <tr>
                     <th>Full Name</th>
                     <th>ID Number</th>
+                    <?php if ($showRole): ?><th>Role</th><?php endif; ?>
                     <th>Username</th>
+                    <th>Dept</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
-                    <tr><td colspan="4" class="text-center py-3 text-muted">No users found in this category.</td></tr>
+                    <tr><td colspan="<?= $showRole ? 6 : 5 ?>" class="text-center py-4 text-muted italic">No users found in this category.</td></tr>
                 <?php endif; ?>
                 <?php foreach ($users as $user): ?>
                     <tr>
-                        <td class="fw-bold"><?= $user['full_name'] ?></td>
-                        <td><?= $user['matric_staff_id'] ?></td>
-                        <td><?= $user['username'] ?></td>
+                        <td class="fw-bold"><?= htmlspecialchars($user['full_name']) ?></td>
+                        <td><?= htmlspecialchars($user['matric_staff_id']) ?></td>
+                        <?php if ($showRole): ?>
+                            <td><span class="badge bg-info text-dark"><?= $user['role'] ?></span></td>
+                        <?php endif; ?>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td class="small text-muted"><?= htmlspecialchars($user['dept_name'] ?? 'N/A') ?></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary py-0" data-bs-toggle="modal" data-bs-target="#editUser<?= $user['id'] ?>">Edit</button>
+                                <button class="btn btn-sm btn-outline-primary py-0" data-bs-toggle="modal" data-bs-target="#editUserModal<?= $user['id'] ?>">Edit</button>
                                 <form action="<?= BASE_URL ?>/admin/users" method="POST" class="d-inline" onsubmit="return confirm('Delete this user?')">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?= $user['id'] ?>">
@@ -132,16 +163,16 @@ function renderUserTable($users, $departments) { ?>
                                 </form>
                             </div>
 
-                            <!-- Edit Modal -->
-                            <div class="modal fade" id="editUser<?= $user['id'] ?>" tabindex="-1" aria-hidden="true">
+                            <!-- Edit Modal (Inside Tab) -->
+                            <div class="modal fade" id="editUserModal<?= $user['id'] ?>" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <div class="modal-content">
+                                    <div class="modal-content border-0 shadow">
                                         <form action="<?= BASE_URL ?>/admin/users" method="POST">
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                                            <div class="modal-header">
+                                            <div class="modal-header bg-primary text-white">
                                                 <h6 class="modal-title">Edit User: <?= htmlspecialchars($user['username']) ?></h6>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 <div class="row g-2">
@@ -181,8 +212,8 @@ function renderUserTable($users, $departments) { ?>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary btn-sm w-100">Update User</button>
+                                            <div class="modal-footer bg-light">
+                                                <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Update User</button>
                                             </div>
                                         </form>
                                     </div>
