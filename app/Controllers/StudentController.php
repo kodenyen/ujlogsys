@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\User;
 use App\Models\Department;
-use App\Models\Section;
+use App\Models\Session as SessionModel;
 use App\Models\Attendance;
 
 class StudentController extends Controller {
@@ -23,7 +23,7 @@ class StudentController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_attendance') {
             $data = [
                 'student_id' => $_SESSION['user_id'],
-                'section_id' => $_POST['section_id'],
+                'session_id' => $_POST['session_id'],
                 'consultant_id' => $_POST['consultant_id'],
                 'attendance_date' => $_POST['attendance_date'],
                 'status' => $_POST['status']
@@ -64,8 +64,6 @@ class StudentController extends Controller {
     // AJAX endpoint to get activity types by department
     public function getActivityTypes() {
         if (isset($_GET['dept_id'])) {
-            $typeModel = new \App\Models\LogActivityType();
-            // Need a getByDept method in LogActivityType
             $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("SELECT * FROM log_activity_types WHERE department_id = ?");
             $stmt->execute([$_GET['dept_id']]);
             $types = $stmt->fetchAll();
@@ -86,13 +84,13 @@ class StudentController extends Controller {
         }
     }
 
-    // AJAX endpoint to get sections by department
-    public function getSections() {
+    // AJAX endpoint to get sessions by department
+    public function getSessions() {
         if (isset($_GET['dept_id'])) {
-            $sectionModel = new Section();
-            $sections = $sectionModel->getByDept($_GET['dept_id']);
+            $sessionModel = new SessionModel();
+            $sessions = $sessionModel->getByDept($_GET['dept_id']);
             header('Content-Type: application/json');
-            echo json_encode($sections);
+            echo json_encode($sessions);
             exit();
         }
     }

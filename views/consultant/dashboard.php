@@ -4,6 +4,11 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Consultant Dashboard</h1>
+        <?php if (!empty($pending_attendance)): ?>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmAllModal">
+                <i class="fa-solid fa-check-double me-2"></i> Confirm All Pending
+            </button>
+        <?php endif; ?>
     </div>
 
     <?php if (isset($_GET['error']) && $_GET['error'] === 'invalid_password'): ?>
@@ -27,7 +32,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Student Name</th>
-                                    <th>Section</th>
+                                    <th>Session</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -37,7 +42,7 @@
                                     <tr>
                                         <td><?= date('d M, Y', strtotime($record['attendance_date'])) ?></td>
                                         <td class="fw-bold"><?= $record['student_name'] ?></td>
-                                        <td><?= $record['section_name'] ?></td>
+                                        <td><?= $record['session_name'] ?></td>
                                         <td>
                                             <span class="badge <?= $record['status'] === 'Present' ? 'bg-success' : 'bg-danger' ?>">
                                                 <?= $record['status'] ?>
@@ -109,7 +114,7 @@
                                             <div class="collapse mt-2" id="logData<?= $log['id'] ?>">
                                                 <div class="p-2 bg-light rounded small border">
                                                     <?php foreach ($logData as $label => $val): ?>
-                                                        <div><strong><?= str_replace('_', ' ', $label) ?>:</strong> <?= $val ?></div>
+                                                        <div><strong><?= str_replace('_', ' ', $label) ?>:</strong> <?= $v ?></div>
                                                     <?php endforeach; ?>
                                                 </div>
                                             </div>
@@ -149,6 +154,27 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm All Modal -->
+    <div class="modal fade" id="confirmAllModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form action="<?= BASE_URL ?>/consultant/confirmAllAttendance" method="POST">
+                    <div class="modal-header">
+                        <h6 class="modal-title">Bulk Confirmation</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="small text-muted mb-3">Enter your password to confirm <strong>ALL</strong> pending attendance records at once.</p>
+                        <input type="password" class="form-control" name="password" placeholder="Your Password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary w-100">Confirm All Now</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

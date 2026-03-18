@@ -30,8 +30,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= strpos($_GET['url'] ?? '', 'sections') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>/admin/sections">
-                        <i class="fa-solid fa-sitemap me-2"></i> Sections
+                    <a class="nav-link <?= strpos($_GET['url'] ?? '', 'sessions') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>/admin/sessions">
+                        <i class="fa-solid fa-sitemap me-2"></i> Sessions
                     </a>
                 </li>
                 <li class="nav-item">
@@ -59,15 +59,20 @@
                 </li>
             <?php endif; ?>
 
-            <?php if ($_SESSION['role'] === 'Consultant'): ?>
+            <?php if (in_array($_SESSION['role'], ['Consultant', 'Lecturer', 'Tutor'])): ?>
                 <li class="nav-item">
                     <a class="nav-link <?= strpos($_GET['url'] ?? '', 'dashboard') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>/consultant/dashboard">
                         <i class="fa-solid fa-gauge me-2"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fa-solid fa-file-signature me-2"></i> Log Approvals
+                    <a class="nav-link" href="<?= BASE_URL ?>/admin/reports?report_type=attendance">
+                        <i class="fa-solid fa-calendar-check me-2"></i> Attendance Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASE_URL ?>/admin/reports?report_type=clinical_log">
+                        <i class="fa-solid fa-file-medical me-2"></i> Clinical Log Reports
                     </a>
                 </li>
             <?php endif; ?>

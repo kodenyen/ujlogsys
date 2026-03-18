@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS departments (
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Sections table
-CREATE TABLE IF NOT EXISTS sections (
+-- Sessions table
+CREATE TABLE IF NOT EXISTS sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     department_id INT,
@@ -32,14 +32,14 @@ CREATE TABLE IF NOT EXISTS sections (
 CREATE TABLE IF NOT EXISTS attendance_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
-    section_id INT,
+    session_id INT,
     consultant_id INT,
     attendance_date DATE NOT NULL,
     status ENUM('Present', 'Absent') NOT NULL,
     is_confirmed BOOLEAN DEFAULT FALSE,
     confirmed_at TIMESTAMP NULL,
     FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
     FOREIGN KEY (consultant_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\User;
 use App\Models\Department;
-use App\Models\Section;
+use App\Models\Session as SessionModel;
 
 class AdminController extends Controller {
     public function __construct() {
@@ -16,14 +16,14 @@ class AdminController extends Controller {
     public function index() {
         $userModel = new User();
         $deptModel = new Department();
-        $sectionModel = new Section();
+        $sessionModel = new SessionModel();
 
         $data = [
             'title' => 'Admin Dashboard',
             'student_count' => count($userModel->getAllByRole('Student')),
             'staff_count' => count($userModel->getAllByRole('Lecturer')) + count($userModel->getAllByRole('Consultant')),
             'dept_count' => count($deptModel->getAll()),
-            'section_count' => count($sectionModel->getAllWithDept())
+            'session_count' => count($sessionModel->getAllWithDept())
         ];
 
         $this->render('admin/dashboard', $data);
@@ -32,8 +32,17 @@ class AdminController extends Controller {
     public function departments() {
         $deptModel = new Department();
         
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dept_name'])) {
-            $deptModel->create($_POST['dept_name']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'delete') {
+                    $deptModel->delete($_POST['id']);
+                } elseif ($_POST['action'] === 'edit') {
+                    $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("UPDATE departments SET name = ? WHERE id = ?");
+                    $stmt->execute([$_POST['dept_name'], $_POST['id']]);
+                }
+            } elseif (isset($_POST['dept_name'])) {
+                $deptModel->create($_POST['dept_name']);
+            }
             $this->redirect('/admin/departments');
         }
 
@@ -43,18 +52,26 @@ class AdminController extends Controller {
         ]);
     }
 
-    public function sections() {
-        $sectionModel = new Section();
+    public function sessions() {
+        $sessionModel = new SessionModel();
         $deptModel = new Department();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_name'])) {
-            $sectionModel->create($_POST['section_name'], $_POST['dept_id']);
-            $this->redirect('/admin/sections');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'delete') {
+                    $sessionModel->delete($_POST['id']);
+                } elseif ($_POST['action'] === 'edit') {
+                    $sessionModel->update($_POST['id'], $_POST['session_name'], $_POST['dept_id']);
+                }
+            } elseif (isset($_POST['session_name'])) {
+                $sessionModel->create($_POST['session_name'], $_POST['dept_id']);
+            }
+            $this->redirect('/admin/sessions');
         }
 
-        $this->render('admin/sections', [
-            'title' => 'Manage Sections',
-            'sections' => $sectionModel->getAllWithDept(),
+        $this->render('admin/sessions', [
+            'title' => 'Manage Sessions',
+            'sessions' => $sessionModel->getAllWithDept(),
             'departments' => $deptModel->getAll()
         ]);
     }
@@ -64,17 +81,35 @@ class AdminController extends Controller {
         $deptModel = new Department();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $data = [
-                'full_name' => $_POST['full_name'],
-                'username' => $_POST['username'],
-                'password_hash' => $password,
-                'role' => $_POST['role'],
-                'matric_staff_id' => $_POST['matric_staff_id'],
-                'photo' => null, // Photo upload logic can be added later
-                'dept_id' => $_POST['dept_id'] ?: null
-            ];
-            $userModel->create($data);
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'delete') {
+                    $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$_POST['id']]);
+                } elseif ($_POST['action'] === 'edit') {
+                    $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ? WHERE id = ?";
+                    $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, $_POST['id']];
+                    
+                    if (!empty($_POST['password'])) {
+                        $sql = "UPDATE users SET full_name = ?, username = ?, role = ?, matric_staff_id = ?, dept_id = ?, password_hash = ? WHERE id = ?";
+                        $params = [$_POST['full_name'], $_POST['username'], $_POST['role'], $_POST['matric_staff_id'], $_POST['dept_id'] ?: null, password_hash($_POST['password'], PASSWORD_DEFAULT), $_POST['id']];
+                    }
+                    
+                    $stmt = \App\Core\Database::getInstance()->getConnection()->prepare($sql);
+                    $stmt->execute($params);
+                }
+            } else {
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $data = [
+                    'full_name' => $_POST['full_name'],
+                    'username' => $_POST['username'],
+                    'password_hash' => $password,
+                    'role' => $_POST['role'],
+                    'matric_staff_id' => $_POST['matric_staff_id'],
+                    'photo' => null,
+                    'dept_id' => $_POST['dept_id'] ?: null
+                ];
+                $userModel->create($data);
+            }
             $this->redirect('/admin/users');
         }
 
@@ -94,7 +129,17 @@ class AdminController extends Controller {
         $deptModel = new Department();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['field_label'])) {
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'delete_field') {
+                    $fieldModel->delete($_POST['id']);
+                } elseif ($_POST['action'] === 'edit_field') {
+                    $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("UPDATE log_activity_fields SET field_label = ?, field_type = ? WHERE id = ?");
+                    $stmt->execute([$_POST['field_label'], $_POST['field_type'], $_POST['id']]);
+                } elseif ($_POST['action'] === 'delete_type') {
+                    $stmt = \App\Core\Database::getInstance()->getConnection()->prepare("DELETE FROM log_activity_types WHERE id = ?");
+                    $stmt->execute([$_POST['id']]);
+                }
+            } elseif (isset($_POST['field_label'])) {
                 $fieldModel->create($_POST['field_label'], $_POST['field_type'], 1);
             } elseif (isset($_POST['activity_name'])) {
                 $typeId = $typeModel->create($_POST['activity_name'], $_POST['dept_id']);
@@ -118,12 +163,15 @@ class AdminController extends Controller {
     public function reports() {
         $userModel = new User();
         $deptModel = new Department();
+        $sessionModel = new SessionModel();
         $attendanceModel = new \App\Models\Attendance();
         $logModel = new \App\Models\LogActivityEntry();
+        $settingModel = new \App\Models\Setting();
 
         $filters = [
             'student_id' => $_GET['student_id'] ?? null,
             'dept_id' => $_GET['dept_id'] ?? null,
+            'session_id' => $_GET['session_id'] ?? null,
             'start_date' => $_GET['start_date'] ?? null,
             'end_date' => $_GET['end_date'] ?? null,
             'report_type' => $_GET['report_type'] ?? 'attendance'
@@ -133,7 +181,9 @@ class AdminController extends Controller {
             'title' => 'System Reports',
             'students' => $userModel->getAllByRole('Student'),
             'departments' => $deptModel->getAll(),
-            'filters' => $filters
+            'sessions' => $sessionModel->getAllWithDept(),
+            'filters' => $filters,
+            'branding' => $settingModel->get()
         ];
 
         if ($filters['report_type'] === 'attendance') {
@@ -155,11 +205,11 @@ class AdminController extends Controller {
         $output = fopen('php://output', 'w');
         
         if ($report_type === 'attendance') {
-            fputcsv($output, ['Date', 'Student', 'Department', 'Section', 'Consultant', 'Status', 'Confirmed']);
+            fputcsv($output, ['Date', 'Student', 'Department', 'Session', 'Consultant', 'Status', 'Confirmed']);
             $model = new \App\Models\Attendance();
             $records = $model->getFilteredReports($filters);
             foreach ($records as $row) {
-                fputcsv($output, [$row['attendance_date'], $row['student_name'], $row['dept_name'], $row['section_name'], $row['consultant_name'], $row['status'], $row['is_confirmed'] ? 'Yes' : 'No']);
+                fputcsv($output, [$row['attendance_date'], $row['student_name'], $row['dept_name'], $row['session_name'], $row['consultant_name'], $row['status'], $row['is_confirmed'] ? 'Yes' : 'No']);
             }
         } else {
             fputcsv($output, ['ID', 'Student', 'Activity Type', 'Department', 'Consultant', 'Approved']);

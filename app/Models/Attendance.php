@@ -7,17 +7,17 @@ use PDO;
 class Attendance extends Model {
     public function create($data) {
         $stmt = $this->db->prepare("
-            INSERT INTO attendance_records (student_id, section_id, consultant_id, attendance_date, status) 
-            VALUES (:student_id, :section_id, :consultant_id, :attendance_date, :status)
+            INSERT INTO attendance_records (student_id, session_id, consultant_id, attendance_date, status) 
+            VALUES (:student_id, :session_id, :consultant_id, :attendance_date, :status)
         ");
         return $stmt->execute($data);
     }
 
     public function getStudentAttendance($student_id) {
         $stmt = $this->db->prepare("
-            SELECT a.*, s.name as section_name, d.name as dept_name, u.full_name as consultant_name 
+            SELECT a.*, s.name as session_name, d.name as dept_name, u.full_name as consultant_name 
             FROM attendance_records a
-            JOIN sections s ON a.section_id = s.id
+            JOIN sessions s ON a.session_id = s.id
             JOIN departments d ON s.department_id = d.id
             JOIN users u ON a.consultant_id = u.id
             WHERE a.student_id = ?
@@ -29,9 +29,9 @@ class Attendance extends Model {
 
     public function getPendingConsultantConfirmations($consultant_id) {
         $stmt = $this->db->prepare("
-            SELECT a.*, s.name as section_name, u.full_name as student_name 
+            SELECT a.*, s.name as session_name, u.full_name as student_name 
             FROM attendance_records a
-            JOIN sections s ON a.section_id = s.id
+            JOIN sessions s ON a.session_id = s.id
             JOIN users u ON a.student_id = u.id
             WHERE a.consultant_id = ? AND a.is_confirmed = 0
             ORDER BY a.attendance_date DESC
@@ -50,9 +50,9 @@ class Attendance extends Model {
     }
 
     public function getFilteredReports($filters = []) {
-        $sql = "SELECT a.*, s.name as section_name, d.name as dept_name, u.full_name as student_name, c.full_name as consultant_name 
+        $sql = "SELECT a.*, s.name as session_name, d.name as dept_name, u.full_name as student_name, c.full_name as consultant_name 
                 FROM attendance_records a
-                JOIN sections s ON a.section_id = s.id
+                JOIN sessions s ON a.session_id = s.id
                 JOIN departments d ON s.department_id = d.id
                 JOIN users u ON a.student_id = u.id
                 JOIN users c ON a.consultant_id = c.id

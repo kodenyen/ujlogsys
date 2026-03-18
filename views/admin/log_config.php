@@ -12,35 +12,75 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">Step 1: Define Fields</h5>
-                    <small class="text-muted">Create reusable fields (e.g., Hospital No, Diagnosis)</small>
                 </div>
                 <div class="card-body">
                     <form action="<?= BASE_URL ?>/admin/logConfig" method="POST" class="mb-4">
                         <div class="mb-3">
-                            <label class="form-label">Field Label</label>
-                            <input type="text" class="form-control" name="field_label" placeholder="e.g., Hospital Number" required>
+                            <label class="form-label small fw-bold">Field Label</label>
+                            <input type="text" class="form-control form-control-sm" name="field_label" placeholder="e.g., Hospital Number" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Input Type</label>
-                            <select class="form-select" name="field_type" required>
+                            <label class="form-label small fw-bold">Input Type</label>
+                            <select class="form-select form-select-sm" name="field_type" required>
                                 <option value="text">Short Text</option>
                                 <option value="textarea">Long Text / Narrative</option>
                                 <option value="date">Date Selector</option>
                                 <option value="number">Numeric Only</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Add Field</button>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Add Field</button>
                     </form>
 
                     <h6>Existing Fields</h6>
-                    <div class="list-group list-group-flush border rounded">
+                    <div class="list-group list-group-flush border rounded shadow-sm">
                         <?php foreach ($fields as $field): ?>
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="list-group-item d-flex justify-content-between align-items-center py-2">
                                 <div>
-                                    <span class="fw-bold"><?= $field['field_label'] ?></span>
-                                    <br><small class="text-muted">Type: <?= $field['field_type'] ?></small>
+                                    <span class="fw-bold small"><?= $field['field_label'] ?></span>
+                                    <br><small class="text-muted"><?= $field['field_type'] ?></small>
                                 </div>
-                                <button class="btn btn-sm text-danger"><i class="fa-solid fa-trash"></i></button>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-link text-primary p-0 me-2" data-bs-toggle="modal" data-bs-target="#editField<?= $field['id'] ?>"><i class="fa-solid fa-edit"></i></button>
+                                    <form action="<?= BASE_URL ?>/admin/logConfig" method="POST" onsubmit="return confirm('Delete this field?')">
+                                        <input type="hidden" name="action" value="delete_field">
+                                        <input type="hidden" name="id" value="<?= $field['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Edit Field Modal -->
+                            <div class="modal fade" id="editField<?= $field['id'] ?>" tabindex="-1">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <form action="<?= BASE_URL ?>/admin/logConfig" method="POST">
+                                            <input type="hidden" name="action" value="edit_field">
+                                            <input type="hidden" name="id" value="<?= $field['id'] ?>">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title">Edit Field</h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Field Label</label>
+                                                    <input type="text" class="form-control form-control-sm" name="field_label" value="<?= $field['field_label'] ?>" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Input Type</label>
+                                                    <select class="form-select form-select-sm" name="field_type" required>
+                                                        <option value="text" <?= $field['field_type'] === 'text' ? 'selected' : '' ?>>Short Text</option>
+                                                        <option value="textarea" <?= $field['field_type'] === 'textarea' ? 'selected' : '' ?>>Long Text</option>
+                                                        <option value="date" <?= $field['field_type'] === 'date' ? 'selected' : '' ?>>Date</option>
+                                                        <option value="number" <?= $field['field_type'] === 'number' ? 'selected' : '' ?>>Number</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary btn-sm w-100">Update Field</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -53,60 +93,88 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">Step 2: Create Activity Types</h5>
-                    <small class="text-muted">Group fields into specific report types (e.g., Clerking)</small>
                 </div>
                 <div class="card-body">
-                    <form action="<?= BASE_URL ?>/admin/logConfig" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Activity Type Name</label>
-                            <input type="text" class="form-control" name="activity_name" placeholder="e.g., Antenatal - Clerking and Presentation" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Target Department</label>
-                            <select class="form-select" name="dept_id" required>
-                                <option value="">Select Department</option>
-                                <?php foreach ($departments as $dept): ?>
-                                    <option value="<?= $dept['id'] ?>"><?= $dept['name'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Assign Fields to this Type</label>
-                            <div class="border rounded p-3 bg-light" style="max-height: 200px; overflow-y: auto;">
-                                <?php foreach ($fields as $field): ?>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="fields[]" value="<?= $field['id'] ?>" id="f<?= $field['id'] ?>">
-                                        <label class="form-check-label" for="f<?= $field['id'] ?>">
-                                            <?= $field['field_label'] ?>
-                                        </label>
-                                    </div>
-                                <?php endforeach; ?>
+                    <form action="<?= BASE_URL ?>/admin/logConfig" method="POST" class="mb-4 p-3 bg-light rounded border">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Activity Name</label>
+                                <input type="text" class="form-control form-control-sm" name="activity_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Department</label>
+                                <select class="form-select form-select-sm" name="dept_id" required>
+                                    <?php foreach ($departments as $dept): ?>
+                                        <option value="<?= $dept['id'] ?>"><?= $dept['name'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Assign Fields</label>
+                                <div class="border rounded p-2 bg-white" style="max-height: 120px; overflow-y: auto;">
+                                    <?php foreach ($fields as $field): ?>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="fields[]" value="<?= $field['id'] ?>" id="fx<?= $field['id'] ?>">
+                                            <label class="form-check-label small" for="fx<?= $field['id'] ?>"><?= $field['field_label'] ?></label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success btn-sm w-100">Register Activity Type</button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Create Activity Type</button>
                     </form>
 
                     <h6 class="mt-4">Registered Activity Types</h6>
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover border">
+                        <table class="table table-sm table-hover border small">
                             <thead class="table-light">
                                 <tr>
                                     <th>Activity Type</th>
                                     <th>Department</th>
-                                    <th>Fields</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($types as $type): ?>
                                     <tr>
-                                        <td><?= $type['name'] ?></td>
+                                        <td class="fw-bold"><?= $type['name'] ?></td>
                                         <td><span class="badge bg-info text-dark"><?= $type['dept_name'] ?></span></td>
                                         <td>
-                                            <button class="btn btn-sm btn-link py-0" data-bs-toggle="tooltip" title="View assigned fields">
-                                                <i class="fa-solid fa-eye"></i> View
-                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary py-0" data-bs-toggle="modal" data-bs-target="#viewFields<?= $type['id'] ?>">View</button>
+                                            <form action="<?= BASE_URL ?>/admin/logConfig" method="POST" class="d-inline" onsubmit="return confirm('Delete this activity type?')">
+                                                <input type="hidden" name="action" value="delete_type">
+                                                <input type="hidden" name="id" value="<?= $type['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-link text-danger py-0"><i class="fa-solid fa-trash"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
+
+                                    <!-- View Fields Modal -->
+                                    <div class="modal fade" id="viewFields<?= $type['id'] ?>" tabindex="-1">
+                                        <div class="modal-dialog modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h6 class="modal-title">Fields for <?= $type['name'] ?></h6>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <ul class="list-group list-group-flush">
+                                                        <?php 
+                                                        $typeModel = new \App\Models\LogActivityType();
+                                                        $assignedFields = $typeModel->getFields($type['id']);
+                                                        foreach ($assignedFields as $af): ?>
+                                                            <li class="list-group-item d-flex justify-content-between small">
+                                                                <?= $af['field_label'] ?>
+                                                                <span class="text-muted"><?= $af['field_type'] ?></span>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>

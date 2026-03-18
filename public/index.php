@@ -32,18 +32,19 @@ $router->add('logout', 'AuthController', 'logout');
 $router->add('admin/dashboard', 'AdminController', 'index');
 $router->add('admin/users', 'AdminController', 'users');
 $router->add('admin/departments', 'AdminController', 'departments');
-$router->add('admin/sections', 'AdminController', 'sections');
+$router->add('admin/sessions', 'AdminController', 'sessions');
 $router->add('admin/logConfig', 'AdminController', 'logConfig');
 $router->add('admin/reports', 'AdminController', 'reports');
 $router->add('admin/exportCSV', 'AdminController', 'exportCSV');
 $router->add('admin/settings', 'AdminController', 'settings');
 $router->add('student/dashboard', 'StudentController', 'index');
-$router->add('student/getSections', 'StudentController', 'getSections');
+$router->add('student/getSessions', 'StudentController', 'getSessions');
 $router->add('student/getActivityTypes', 'StudentController', 'getActivityTypes');
 $router->add('student/getTypeFields', 'StudentController', 'getTypeFields');
 $router->add('student/submitLog', 'StudentController', 'submitLog');
 $router->add('consultant/dashboard', 'ConsultantController', 'index');
 $router->add('consultant/confirmAttendance', 'ConsultantController', 'confirmAttendance');
+$router->add('consultant/confirmAllAttendance', 'ConsultantController', 'confirmAllAttendance');
 $router->add('consultant/approveLog', 'ConsultantController', 'approveLog');
 
 // Get URL and dispatch

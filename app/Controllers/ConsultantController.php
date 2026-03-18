@@ -59,4 +59,24 @@ class ConsultantController extends Controller {
             }
         }
     }
+
+    public function confirmAllAttendance() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'];
+
+            $userModel = new User();
+            $user = $userModel->findByUsername($_SESSION['username']);
+
+            if (password_verify($password, $user['password_hash'])) {
+                $attendanceModel = new Attendance();
+                $pending = $attendanceModel->getPendingConsultantConfirmations($_SESSION['user_id']);
+                foreach ($pending as $record) {
+                    $attendanceModel->confirm($record['id']);
+                }
+                $this->redirect('/consultant/dashboard');
+            } else {
+                $this->redirect('/consultant/dashboard?error=invalid_password');
+            }
+        }
+    }
 }

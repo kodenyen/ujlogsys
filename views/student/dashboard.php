@@ -26,7 +26,7 @@
                         <tr>
                             <th>S/N</th>
                             <th>Date</th>
-                            <th>Section</th>
+                            <th>Session</th>
                             <th>Consultant</th>
                             <th>Status</th>
                             <th>Confirmation</th>
@@ -37,7 +37,7 @@
                             <tr>
                                 <td><?= $index + 1 ?></td>
                                 <td><?= date('d M, Y', strtotime($record['attendance_date'])) ?></td>
-                                <td><?= $record['section_name'] ?></td>
+                                <td><?= $record['session_name'] ?></td>
                                 <td><?= $record['consultant_name'] ?></td>
                                 <td>
                                     <span class="badge <?= $record['status'] === 'Present' ? 'bg-success' : 'bg-danger' ?>">
@@ -137,9 +137,9 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Clinical Section</label>
-                            <select class="form-select" id="section_id" name="section_id" required disabled>
-                                <option value="">Select Section</option>
+                            <label class="form-label fw-semibold">Clinical Session</label>
+                            <select class="form-select" id="session_id" name="session_id" required disabled>
+                                <option value="">Select Session</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -230,30 +230,30 @@
 </main>
 
 <script>
-// Logic for Attendance Sections
+// Logic for Attendance Sessions
 document.getElementById('dept_id').addEventListener('change', function() {
     const deptId = this.value;
-    const sectionSelect = document.getElementById('section_id');
+    const sessionSelect = document.getElementById('session_id');
     
     if (deptId) {
-        sectionSelect.disabled = true;
-        sectionSelect.innerHTML = '<option value="">Loading sections...</option>';
+        sessionSelect.disabled = true;
+        sessionSelect.innerHTML = '<option value="">Loading sessions...</option>';
         
-        fetch('<?= BASE_URL ?>/student/getSections?dept_id=' + deptId)
+        fetch('<?= BASE_URL ?>/student/getSessions?dept_id=' + deptId)
             .then(response => response.json())
             .then(data => {
-                sectionSelect.innerHTML = '<option value="">Select Section</option>';
-                data.forEach(section => {
+                sessionSelect.innerHTML = '<option value="">Select Session</option>';
+                data.forEach(session => {
                     const option = document.createElement('option');
-                    option.value = section.id;
-                    option.textContent = section.name;
-                    sectionSelect.appendChild(option);
+                    option.value = session.id;
+                    option.textContent = session.name;
+                    sessionSelect.appendChild(option);
                 });
-                sectionSelect.disabled = false;
+                sessionSelect.disabled = false;
             });
     } else {
-        sectionSelect.disabled = true;
-        sectionSelect.innerHTML = '<option value="">Select Section</option>';
+        sessionSelect.disabled = true;
+        sessionSelect.innerHTML = '<option value="">Select Session</option>';
     }
 });
 
